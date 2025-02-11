@@ -51,5 +51,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Install Python Dependencies
+        run: |
+          pip install -r C:\Users\User\uniandes\facebook-serverless-integration\src\facebook_integration\requirements.txt
+
       - name: Deploy Serverless Application
         run: serverless deploy --stage test --verbose --force
