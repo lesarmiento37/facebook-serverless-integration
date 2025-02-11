@@ -1,0 +1,52 @@
+service: facebook-integration
+useDotenv: true
+#comment
+frameworkVersion: '3'
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-prune-plugin
+  - serverless-step-functions
+  - serverless-plugin-aws-alerts
+  - serverless-plugin-split-stacks
+  - serverless-python-requirements
+  - serverless-plugin-log-retention
+  - serverless-plugin-tracing
+custom:
+  environments:
+    test: 'test'
+  businessImpact:
+    test: 'test'
+  prune:
+    automatic: true
+    includeLayers: true
+    number: ${env:PRUNE_NUMBER}
+  pythonRequirements:
+    dockerizePip: true
+    useStaticCache: false 
+  serviceTags:
+    Managed-by: 'prueba-lambda'
+    Team: 'test'
+    Country: 'Colombia'
+    Owner: 'Leonardo'
+  dotenv:
+    include: none
+package:
+  individually: true
+
+provider:
+  name: aws
+  runtime: python3.10
+  runtimeManagement: auto 
+  region: ${env:REGION}
+  stackName: ${self:service}
+  stage: ${opt:stage, 'default'}
+  memorySize: 512
+  timeout: ${env:TIMEOUT}
+  logRetentionInDays: ${env:LOGS_RETENTION_DAYS}
+  stackTags: ${self:custom.serviceTags}
+resources:
+  Resources:
+    iamRolParaLambda: ${file(infrastructure/iam/lambda/iamRolParaLambda.yaml):iamRolParaLambda}
+functions:
+  - ${file(infrastructure/lambdas/funcion.yaml)}

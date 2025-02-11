@@ -1,0 +1,10 @@
+  Facebook:
+    module: src/facebook_integration
+    handler: gestor.proyecto
+    runtime: python3.10
+    name: facebook-lambda
+    role: iamRolParaLambda
+    environment:
+      REGION: ${env:REGION}
+      LOG_LEVEL: ${env:LOG_LEVEL}
+      LOG_FORMAT: ${env:LOG_FORMAT}
