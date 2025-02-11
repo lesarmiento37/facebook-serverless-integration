@@ -52,4 +52,4 @@ jobs:
           aws-region: us-east-1
 
       - name: Deploy Serverless Application
-        run: serverless deploy --stage staging --verbose --force
+        run: serverless deploy --stage test --verbose --force
