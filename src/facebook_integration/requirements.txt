@@ -1,5 +1,3 @@
 logging
 requests
 boto3
-json
-os
