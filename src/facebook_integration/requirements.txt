@@ -1,3 +1,2 @@
-logging
 requests
 boto3
