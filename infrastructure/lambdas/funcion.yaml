@@ -1,49 +1,16 @@
-service: facebook-integration
-
-provider:
-  name: aws
-  runtime: python3.10
-  region: ${env:REGION}
-  logRetentionInDays: 14
-  environment:
-    REGION: ${env:REGION}
-    LOG_LEVEL: ${env:LOG_LEVEL}
-    LOG_FORMAT: ${env:LOG_FORMAT}
-
-functions:
   Facebook:
     module: src/facebook_integration
     handler: gestor.proyecto
+    runtime: python3.10
     name: facebook-lambda
     role: iamRolParaLambda
+    environment:
+      REGION: ${env:REGION}
+      LOG_LEVEL: ${env:LOG_LEVEL}
+      LOG_FORMAT: ${env:LOG_FORMAT}
     events:
       - httpApi:
           method: POST
           path: /webhook
-          private: true  # Habilita API Key
-
-resources:
-  Resources:
-    ApiGatewayApiKey:
-      Type: AWS::ApiGateway::ApiKey
-      Properties:
-        Name: FacebookApiKey
-        Enabled: true
-        StageKeys:
-          - RestApiId: !Ref HttpApi
-            StageName: $default
-
-    ApiGatewayUsagePlan:
-      Type: AWS::ApiGateway::UsagePlan
-      Properties:
-        UsagePlanName: FacebookUsagePlan
-        ApiStages:
-          - ApiId: !Ref HttpApi
-            Stage: $default
-        Throttle:
-          RateLimit: 10  # Máximo 10 requests por segundo
-          BurstLimit: 20
-        Quota:
-          Limit: 1000  # Máximo 1000 requests por mes
-          Period: MONTH
-        ApiKeyId: !Ref ApiGatewayApiKey
+          private: true
+      
