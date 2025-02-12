@@ -39,7 +39,7 @@ provider:
   apiGateway:
     apiKeys:
       - name: leonardoKey
-        value: leonardoValue
+        value: leonardoValue12345678910111213141516
     usagePlan:
       quota:
         limit: 5000
