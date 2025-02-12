@@ -45,6 +45,8 @@ provider:
   timeout: ${env:TIMEOUT}
   logRetentionInDays: ${env:LOGS_RETENTION_DAYS}
   stackTags: ${self:custom.serviceTags}
+  httpApi:
+    id: !Ref HttpApi 
 resources:
   Resources:
     iamRolParaLambda: ${file(infrastructure/iam/lambda/iamRolParaLambda.yaml):iamRolParaLambda}
@@ -54,7 +56,7 @@ resources:
         Name: FacebookApiKey
         Enabled: true
         StageKeys:
-          - RestApiId: ${self:provider.httpApi.id}
+          - RestApiId: !Ref HttpApi 
             StageName: $default
 
     ApiGatewayUsagePlan:
@@ -62,7 +64,7 @@ resources:
       Properties:
         UsagePlanName: FacebookUsagePlan
         ApiStages:
-          - ApiId: ${self:provider.httpApi.id}
+          - ApiId: !Ref HttpApi
             Stage: $default
         Throttle:
           RateLimit: 10  # Máximo 10 requests por segundo
