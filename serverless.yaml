@@ -36,6 +36,18 @@ package:
 
 provider:
   name: aws
+  apiGateway:
+    apiKeys:
+      - name: leonardoKey
+        value: leonardoValue
+    usagePlan:
+      quota:
+        limit: 5000
+        offset: 2
+        period: MONTH
+      throttle:
+        burstLimit: 200
+        rateLimit: 100
   runtime: python3.10
   runtimeManagement: auto 
   region: ${env:REGION}
@@ -49,29 +61,6 @@ provider:
 resources:
   Resources:
     iamRolParaLambda: ${file(infrastructure/iam/lambda/iamRolParaLambda.yaml):iamRolParaLambda}
-    ApiGatewayApiKey:
-      Type: AWS::ApiGateway::ApiKey
-      Properties:
-        Name: FacebookApiKey
-        Enabled: true
-        StageKeys:
-          - RestApiId: !GetAtt HttpApi.RootResourceId
-            StageName: $default
-
-    ApiGatewayUsagePlan:
-      Type: AWS::ApiGateway::UsagePlan
-      Properties:
-        UsagePlanName: FacebookUsagePlan
-        ApiStages:
-          - ApiId: !Ref HttpApi
-            Stage: $default
-        Throttle:
-          RateLimit: 10  # Máximo 10 requests por segundo
-          BurstLimit: 20
-        Quota:
-          Limit: 1000  # Máximo 1000 requests por mes
-          Period: MONTH
-        ApiKeyId: !Ref ApiGatewayApiKey
 functions:
   - ${file(infrastructure/lambdas/funcion.yaml)}
 

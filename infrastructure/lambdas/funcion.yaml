@@ -9,8 +9,8 @@
       LOG_LEVEL: ${env:LOG_LEVEL}
       LOG_FORMAT: ${env:LOG_FORMAT}
     events:
-      - httpApi:
-          method: POST
+      - http:
+          method: post
           path: /webhook
           private: true
       
