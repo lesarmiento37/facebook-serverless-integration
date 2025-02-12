@@ -54,7 +54,7 @@ resources:
         Name: FacebookApiKey
         Enabled: true
         StageKeys:
-          - RestApiId: !Ref HttpApi
+          - RestApiId: ${self:provider.httpApi.id}
             StageName: $default
 
     ApiGatewayUsagePlan:
@@ -62,7 +62,7 @@ resources:
       Properties:
         UsagePlanName: FacebookUsagePlan
         ApiStages:
-          - ApiId: !Ref HttpApi
+          - ApiId: ${self:provider.httpApi.id}
             Stage: $default
         Throttle:
           RateLimit: 10  # Máximo 10 requests por segundo
