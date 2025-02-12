@@ -45,8 +45,7 @@ provider:
   timeout: ${env:TIMEOUT}
   logRetentionInDays: ${env:LOGS_RETENTION_DAYS}
   stackTags: ${self:custom.serviceTags}
-  httpApi:
-    id: !Ref HttpApi 
+
 resources:
   Resources:
     iamRolParaLambda: ${file(infrastructure/iam/lambda/iamRolParaLambda.yaml):iamRolParaLambda}
