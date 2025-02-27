@@ -13,4 +13,8 @@
           method: post
           path: /webhook
           private: true
+      - http:
+          method: get
+          path: /webhook
+          private: true
       
