@@ -1,6 +1,6 @@
   Facebook:
     module: src/facebook_integration
-    handler: gestor.proyecto
+    handler: gestor.lambda_handler
     runtime: python3.10
     name: facebook-lambda
     role: iamRolParaLambda
