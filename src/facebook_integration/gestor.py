@@ -6,7 +6,8 @@ import os
 ################ Main handler #########################
 def lambda_handler(event, context):
     """Manejo de eventos HTTP de API Gateway para la integración con Facebook Messenger."""
-    
+    print('holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+    print(context)
     http_method = event.get("httpMethod", "")
     path = event.get("path", "")
 
