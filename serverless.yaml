@@ -1,6 +1,5 @@
 service: facebook-integration
 useDotenv: true
-#comment
 frameworkVersion: '3'
 
 plugins:
@@ -12,6 +11,7 @@ plugins:
   - serverless-python-requirements
   - serverless-plugin-log-retention
   - serverless-plugin-tracing
+
 custom:
   environments:
     test: 'test'
@@ -31,6 +31,7 @@ custom:
     Owner: 'Leonardo'
   dotenv:
     include: none
+
 package:
   individually: true
 
@@ -49,9 +50,7 @@ provider:
         burstLimit: 200
         rateLimit: 100
   runtime: python3.10
-  runtimeManagement: auto 
   region: ${env:REGION}
-  stackName: ${self:service}
   stage: ${opt:stage, 'default'}
   memorySize: 512
   timeout: ${env:TIMEOUT}
@@ -61,7 +60,33 @@ provider:
 resources:
   Resources:
     iamRolParaLambda: ${file(infrastructure/iam/lambda/iamRolParaLambda.yaml):iamRolParaLambda}
+
 functions:
-  - ${file(infrastructure/lambdas/funcion.yaml)}
+  lambdaAuthorizer:
+    handler: src/authorizer.lambda_handler  # Asegúrate de que la ruta y la función sean correctas
+    runtime: python3.10
+    role: iamRolParaLambda
+    events:
+      - http:
+          method: get
+          path: /auth  # Ruta para el Lambda Authorizer
 
-
+  facebook:
+    handler: src/facebook_integration.gestor.lambda_handler  # Asegúrate de que la ruta y la función sean correctas
+    runtime: python3.10
+    role: iamRolParaLambda
+    environment:
+      REGION: ${env:REGION}
+      LOG_LEVEL: ${env:LOG_LEVEL}
+      LOG_FORMAT: ${env:LOG_FORMAT}
+    events:
+      - http:
+          method: post
+          path: /webhook
+          authorizer: lambdaAuthorizer
+          private: true
+      - http:
+          method: get
+          path: /webhook
+          authorizer: lambdaAuthorizer
+          private: true
