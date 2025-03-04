@@ -2,6 +2,7 @@
     module: src/facebook_integration
     handler: gestor.lambda_handler 
     runtime: python3.10
+    name: facebook-function
     role: iamRolLambda
     environment:
       REGION: ${env:REGION}
@@ -12,7 +13,7 @@
           method: post
           path: /webhook
           authorizer:
-            name: authorizerFunc
+            name: lambda-authorizer
             resultTtlInSeconds: 0
             identitySource: method.request.header.Authorization
             identityValidationExpression: someRegex
@@ -22,7 +23,7 @@
           method: get
           path: /webhook
           authorizer:
-            name: authorizerFunc
+            name: lambda-authorizer
             resultTtlInSeconds: 0
             identitySource: method.request.header.Authorization
             identityValidationExpression: someRegex
