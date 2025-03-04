@@ -62,31 +62,5 @@ resources:
     iamRolParaLambda: ${file(infrastructure/iam/lambda/iamRolParaLambda.yaml):iamRolParaLambda}
 
 functions:
-  lambdaAuthorizer:
-    handler: src/authorizer.lambda_handler  # Asegúrate de que la ruta y la función sean correctas
-    runtime: python3.10
-    role: iamRolParaLambda
-    events:
-      - http:
-          method: get
-          path: /auth  # Ruta para el Lambda Authorizer
-
-  facebook:
-    handler: src/facebook_integration.gestor.lambda_handler  # Asegúrate de que la ruta y la función sean correctas
-    runtime: python3.10
-    role: iamRolParaLambda
-    environment:
-      REGION: ${env:REGION}
-      LOG_LEVEL: ${env:LOG_LEVEL}
-      LOG_FORMAT: ${env:LOG_FORMAT}
-    events:
-      - http:
-          method: post
-          path: /webhook
-          authorizer: lambdaAuthorizer
-          private: true
-      - http:
-          method: get
-          path: /webhook
-          authorizer: lambdaAuthorizer
-          private: true
+  - ${file(infrastructure/lambdas/funcion.yaml)} 
+  - ${file(infrastructure/lambdas/authorizer.yaml)} 

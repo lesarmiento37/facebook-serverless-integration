@@ -1,0 +1,21 @@
+  facebook:
+    module: src/facebook_integration
+    handler: gestor.lambda_handler 
+    runtime: python3.10
+    role: iamRolLambda
+    environment:
+      REGION: ${env:REGION}
+      LOG_LEVEL: ${env:LOG_LEVEL}
+      LOG_FORMAT: ${env:LOG_FORMAT}
+    events:
+      - http:
+          method: post
+          path: /webhook
+          authorizer: lambdaAuthorizer  # Ruta con el Lambda Authorizer
+          private: true
+      - http:
+          method: get
+          path: /webhook
+          authorizer: lambdaAuthorizer  # Ruta con el Lambda Authorizer
+          private: true
+

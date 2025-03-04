@@ -1,7 +1,7 @@
-iamRolLambda:
+iamRolAuthorizer:
   Type: 'AWS::IAM::Role'
   Properties:
-    RoleName: iamRolLambda
+    RoleName: iamRolParaLambda
     AssumeRolePolicyDocument:
       Version: "2012-10-17"
       Statement:

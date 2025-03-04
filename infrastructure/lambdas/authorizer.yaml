@@ -1,0 +1,10 @@
+functions:
+  lambdaAuthorizer:
+    module: src/facebook_integration
+    handler: authorizer.lambda_handler
+    runtime: python3.10
+    role: iamRolAuthorizer
+    events:
+      - http:
+          method: get
+          path: /auth  # Ruta del authorizer
