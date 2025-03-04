@@ -16,7 +16,6 @@
             name: lambdaAuthorizer
             resultTtlInSeconds: 0
             identitySource: method.request.header.Authorization
-            identityValidationExpression: someRegex
             type: token
           private: true
       - http:
@@ -26,7 +25,6 @@
             name: lambdaAuthorizer
             resultTtlInSeconds: 0
             identitySource: method.request.header.Authorization
-            identityValidationExpression: someRegex
             type: token
           private: true
 
