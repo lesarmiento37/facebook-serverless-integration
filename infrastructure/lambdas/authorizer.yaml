@@ -1,5 +1,5 @@
   lambdaAuthorizer:
-    module: src/facebook_integration
+    module: src/authorizer
     handler: authorizer.lambda_handler
     runtime: python3.10
     role: iamRolAuthorizer
