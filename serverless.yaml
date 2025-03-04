@@ -59,7 +59,9 @@ provider:
 
 resources:
   Resources:
-    iamRolParaLambda: ${file(infrastructure/iam/lambda/iamRolLambda.yaml):iamRolLambda}
+    iamRolLambda: ${file(infrastructure/iam/lambda/iamRolLambda.yaml):iamRolLambda}
+    iamRolAuthorizer: ${file(infrastructure/iam/lambda/iamRolAuthorizer.yaml):iamRolAuthorizer}
+
 
 functions:
   - ${file(infrastructure/lambdas/funcion.yaml)} 
