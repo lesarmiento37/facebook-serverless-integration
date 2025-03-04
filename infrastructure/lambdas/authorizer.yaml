@@ -1,4 +1,3 @@
-functions:
   lambdaAuthorizer:
     module: src/facebook_integration
     handler: authorizer.lambda_handler
