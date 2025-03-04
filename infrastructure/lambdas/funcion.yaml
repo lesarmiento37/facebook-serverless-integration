@@ -11,11 +11,21 @@
       - http:
           method: post
           path: /webhook
-          authorizer: lambdaAuthorizer  # Ruta con el Lambda Authorizer
+          authorizer:
+            name: authorizerFunc
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+            identityValidationExpression: someRegex
+            type: token
           private: true
       - http:
           method: get
           path: /webhook
-          authorizer: lambdaAuthorizer  # Ruta con el Lambda Authorizer
+          authorizer:
+            name: authorizerFunc
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+            identityValidationExpression: someRegex
+            type: token
           private: true
 
