@@ -3,7 +3,7 @@ import json
 def lambda_handler(event, context):
     """Función Lambda Authorizer para validar el token"""
     token = event['headers'].get('Authorization')
-
+    print(event)
     if token == "token_1234":
         # El token es válido
         return {
