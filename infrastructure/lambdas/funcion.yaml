@@ -13,7 +13,7 @@
           method: post
           path: /webhook
           authorizer:
-            name: lambda-authorizer
+            name: lambdaAuthorizer
             resultTtlInSeconds: 0
             identitySource: method.request.header.Authorization
             identityValidationExpression: someRegex
@@ -23,7 +23,7 @@
           method: get
           path: /webhook
           authorizer:
-            name: lambda-authorizer
+            name: lambdaAuthorizer
             resultTtlInSeconds: 0
             identitySource: method.request.header.Authorization
             identityValidationExpression: someRegex

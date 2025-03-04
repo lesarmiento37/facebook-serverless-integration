@@ -2,7 +2,7 @@
     module: src/authorizer
     handler: authorizer.lambda_handler
     runtime: python3.10
-    name: lambda-authorizer
+    name: lambdaAuthorizer
     role: iamRolAuthorizer
     events:
       - http:
