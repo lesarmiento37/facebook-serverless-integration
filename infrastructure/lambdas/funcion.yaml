@@ -9,8 +9,8 @@ functions:
           path: /auth  # Ruta del authorizer
 
   facebook:
-    module: src/facebook_integration
-    handler: gestor.lambda_handler
+    ##module: src/facebook_integration
+    handler: src/facebook_integration.gestor.lambda_handler 
     runtime: python3.10
     role: iamRolParaLambda
     environment:
