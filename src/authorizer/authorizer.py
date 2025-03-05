@@ -3,8 +3,6 @@ import json
 def lambda_handler(event, context):
     token = event['authorizationToken']
 
-     # Imprimimos el token en los logs de CloudWatch
-    print("Token received:", token)
         
     if token == 'allow':
         print('authorized')
