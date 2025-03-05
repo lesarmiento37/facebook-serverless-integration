@@ -1,9 +1,11 @@
 import json
 
 def lambda_handler(event, context):
-    print(event)
-    print(type(event))
-    token = event.get('authorizationToken')
+    print("Received event:", json.dumps(event, indent=2))
+
+    # Buscar el token en los headers
+    headers = event.get('headers', {})
+    token = headers.get('x-auth-token', None)  # Cambia a x-auth-token
     
         
     if token == 'allow':
