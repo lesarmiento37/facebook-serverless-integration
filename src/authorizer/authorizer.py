@@ -22,6 +22,7 @@ def generate_policy(principal_id, effect, resource):
     return auth_response
 
 def lambda_handler(event, context):
+    print(event)
     """Handle incoming request and authorize based on token"""
     token = event["authorizationToken"]
 
