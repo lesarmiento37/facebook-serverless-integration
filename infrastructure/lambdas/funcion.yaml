@@ -14,8 +14,6 @@
           path: /webhook
           authorizer:
             name: lambdaAuthorizer
-            resultTtlInSeconds: 0
-            identitySource: method.request.header.Authorization
             type: token
           private: true
       - http:
@@ -23,8 +21,6 @@
           path: /webhook
           authorizer:
             name: lambdaAuthorizer
-            resultTtlInSeconds: 0
-            identitySource: method.request.header.Authorization
             type: token
           private: true
 
