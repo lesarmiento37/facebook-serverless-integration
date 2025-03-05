@@ -1,8 +1,8 @@
 import json
 
 def lambda_handler(event, context):
-    token = event['authorizationToken']
-
+    token = json.loads(event['authorizationToken'])
+    
         
     if token == 'allow':
         print('authorized')
