@@ -1,53 +1,34 @@
 import json
 
-def lambda_handler(event, context):
-    print("Received event:", json.dumps(event, indent=2))
-
-    # Buscar el token en los headers
-    headers = event.get('headers', {})
-    token = headers.get('x-auth-token', None)  # Cambia a x-auth-token
-    
-        
-    if token == 'allow':
-        print('authorized')
-        response = generatePolicy('user', 'Allow', event['methodArn'])
-    elif token == 'deny':
-        print('unauthorized')
-        response = generatePolicy('user', 'Deny', event['methodArn'])
-    elif token == 'unauthorized':
-        print('unauthorized')
-        # Provoca un 401 Unauthorized
-        raise Exception('Unauthorized')
-    else:
-        # Cualquier otro valor => 500 Internal Server Error
-        print('Internal Error')
-        raise Exception('Internal server error')
-    
-    # Devuelve la política en forma de dict
-    return json.loads(response)
-
-def generatePolicy(principalId, effect, resource):
-    policyDocument = {
-        'Version': '2012-10-17',
-        'Statement': []
+def generate_policy(principal_id, effect, resource):
+    """Generate an IAM policy document"""
+    auth_response = {
+        "principalId": principal_id
     }
 
-    statementOne = {
-        'Action': 'execute-api:Invoke',
-        'Effect': effect,
-        'Resource': resource
-    }
-    policyDocument['Statement'].append(statementOne)
-
-    authResponse = {
-        'principalId': principalId,
-        'policyDocument': policyDocument,
-        # Esto se inyecta en requestContext.authorizer en el backend
-        'context': {
-            "stringKey": "stringval",
-            "numberKey": 123,
-            "booleanKey": True
+    if effect and resource:
+        policy_document = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Action": "execute-api:Invoke",
+                    "Effect": effect,
+                    "Resource": resource
+                }
+            ]
         }
-    }
+        auth_response["policyDocument"] = policy_document
 
-    return json.dumps(authResponse)
+    return auth_response
+
+def lambda_handler(event, context):
+    """Handle incoming request and authorize based on token"""
+    token = event["authorizationToken"]
+
+    # Replace this with your token validation logic
+    valid_token = "xyz987"
+
+    if token == valid_token:
+        return generate_policy("user", "Allow", event["methodArn"])
+    else:
+        return generate_policy("user", "Deny", event["methodArn"])
