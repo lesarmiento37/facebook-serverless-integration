@@ -1,27 +1,51 @@
 import json
 
 def lambda_handler(event, context):
-    """Función Lambda Authorizer para validar el token"""
-    token = event['headers'].get('Authorization')
-    print(event)
-    if token == "token_1234":
-        # El token es válido
-        return {
-            "principalId": "user|a1b2c3d4",
-            "policyDocument": {
-                "Version": "2012-10-17",
-                "Statement": [
-                    {
-                        "Effect": "Allow",
-                        "Action": "execute-api:Invoke",
-                        "Resource": event["methodArn"]
-                    }
-                ]
-            }
-        }
+    token = event['authorizationToken']
+
+     # Imprimimos el token en los logs de CloudWatch
+    print("Token received:", token)
+        
+    if token == 'allow':
+        print('authorized')
+        response = generatePolicy('user', 'Allow', event['methodArn'])
+    elif token == 'deny':
+        print('unauthorized')
+        response = generatePolicy('user', 'Deny', event['methodArn'])
+    elif token == 'unauthorized':
+        print('unauthorized')
+        # Provoca un 401 Unauthorized
+        raise Exception('Unauthorized')
     else:
-        # El token no es válido
-        return {
-            "statusCode": 403,
-            "body": json.dumps({"message": "Forbidden"})
+        # Cualquier otro valor => 500 Internal Server Error
+        print('Internal Error')
+        raise Exception('Internal server error')
+    
+    # Devuelve la política en forma de dict
+    return json.loads(response)
+
+def generatePolicy(principalId, effect, resource):
+    policyDocument = {
+        'Version': '2012-10-17',
+        'Statement': []
+    }
+
+    statementOne = {
+        'Action': 'execute-api:Invoke',
+        'Effect': effect,
+        'Resource': resource
+    }
+    policyDocument['Statement'].append(statementOne)
+
+    authResponse = {
+        'principalId': principalId,
+        'policyDocument': policyDocument,
+        # Esto se inyecta en requestContext.authorizer en el backend
+        'context': {
+            "stringKey": "stringval",
+            "numberKey": 123,
+            "booleanKey": True
         }
+    }
+
+    return json.dumps(authResponse)
