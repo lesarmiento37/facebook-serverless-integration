@@ -65,4 +65,4 @@ def handle_webhook(event):
         return {
             "statusCode": 500,
             "body": json.dumps({"message": "Error interno del servidor"})
-        }
+}
