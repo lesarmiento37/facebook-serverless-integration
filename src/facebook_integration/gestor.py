@@ -6,7 +6,7 @@ def lambda_handler(event, context):
     print("📥 Evento recibido:", json.dumps(event, indent=2))
 
     http_method = event.get("httpMethod", "")
-    
+
     if http_method == "GET":
         return handle_verification(event)
     elif http_method == "POST":
@@ -18,20 +18,24 @@ def lambda_handler(event, context):
     }
 
 def handle_verification(event):
-    """Verifica el webhook de Facebook mediante el método GET, esperando Authorization en los headers."""
+    """Verifica el webhook de Facebook mediante el método GET."""
     try:
-        headers = event.get("headers", {})
+        query_params = event.get("queryStringParameters", {})
 
-        # Obtener el Authorization token del header
-        received_token = headers.get("Authorization", "")
-        expected_token = os.getenv("FACEBOOK_VERIFY_TOKEN", "")
+        mode = query_params.get("hub.mode", "")
+        token = query_params.get("hub.verify_token", "")
+        challenge = query_params.get("hub.challenge", "")
 
-        if received_token == expected_token:
+        expected_token = os.getenv("FACEBOOK_VERIFY_TOKEN", "xyz987")
+
+        if mode == "subscribe" and token == expected_token:
+            print("✅ Facebook verification exitosa")
             return {
                 "statusCode": 200,
-                "body": json.dumps({"message": "Verificación exitosa"})
+                "body": challenge
             }
         else:
+            print("🚫 Verificación fallida")
             return {
                 "statusCode": 403,
                 "body": json.dumps({"message": "Verificación fallida"})
@@ -65,4 +69,4 @@ def handle_webhook(event):
         return {
             "statusCode": 500,
             "body": json.dumps({"message": "Error interno del servidor"})
-}
+        }

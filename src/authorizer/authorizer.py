@@ -1,10 +1,14 @@
 import json
 import os
 
-def generate_policy(principal_id, effect, resource):
-    """Genera un documento de política IAM para API Gateway."""
-    if not effect or not resource:
+def generate_policy(principal_id, effect, method_arn):
+    """Genera una política IAM para API Gateway, permitiendo todas las rutas del API."""
+    if not effect or not method_arn:
         return {"principalId": principal_id}
+
+    # Extraer el ARN base para permitir acceso a toda la API
+    arn_parts = method_arn.split("/")
+    api_arn = "/".join(arn_parts[:2]) + "/*"
 
     return {
         "principalId": principal_id,
@@ -14,7 +18,7 @@ def generate_policy(principal_id, effect, resource):
                 {
                     "Action": "execute-api:Invoke",
                     "Effect": effect,
-                    "Resource": resource
+                    "Resource": api_arn  # Permitir acceso a toda la API
                 }
             ]
         }
@@ -30,8 +34,16 @@ def lambda_handler(event, context):
     print("📥 Evento recibido:", json.dumps(event, indent=2))
 
     try:
-        token = event.get("authorizationToken", "").strip()
         method_arn = event.get("methodArn", "")
+        token = event.get("authorizationToken", "").strip()
+
+        # ⚡ EXCEPCIÓN para permitir solicitudes GET de verificación de Facebook
+        if "hub.mode" in event.get("queryStringParameters", {}):
+            print("🔹 Permitiendo verificación de Facebook sin autorización")
+            return generate_policy("facebook", "Allow", method_arn)
+
+        print(f"📢 Token recibido: {token}")
+        print(f"🔹 Método ARN recibido: {method_arn}")
 
         if not token or not method_arn:
             print("❌ Falta el token o el ARN del método")
