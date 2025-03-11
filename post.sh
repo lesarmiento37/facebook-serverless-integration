@@ -17,3 +17,10 @@ curl -X GET "https://zhh86kffoi.execute-api.us-east-1.amazonaws.com/test/prueba"
 
 
 
+curl GET "https://zhh86kffoi.execute-api.us-east-1.amazonaws.com/test/prueba" \
+-H "Content-Type: application/json" \
+-H "Authorization: xyz987"
+
+
+
+

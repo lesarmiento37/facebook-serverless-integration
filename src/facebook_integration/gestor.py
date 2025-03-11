@@ -52,7 +52,7 @@ def handle_webhook(event):
     """Recibe eventos de Facebook mediante POST y los procesa."""
     try:
         body = json.loads(event.get("body", "{}"))
-        print("📩 Evento recibido de Facebook:", json.dumps(body, indent=2))
+        print("📩 Evento recibido de Facebook:", json.dumps(body, separators=(',', ':')))
 
         return {
             "statusCode": 200,
