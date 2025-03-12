@@ -86,7 +86,7 @@ resources:
     FacebookEvents:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: table_test
+        TableName: FacebookEvents
         AttributeDefinitions:
           - AttributeName: message_id
             AttributeType: S
