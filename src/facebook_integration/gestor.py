@@ -94,8 +94,6 @@ def insert_into_dynamodb(mensaje):
         message_id = str(uuid.uuid4())  # Generar un UUID único
         text = mensaje.get("Text", "No text provided").strip()
         sentiment = mensaje.get("Sentiment", "Unknown").strip()
-        timestamp_str = mensaje.get("Timestamp", "")
-        timestamp = int(datetime.strptime(timestamp_str, "%d/%m/%Y %H:%M").timestamp()) if timestamp_str else int(datetime.utcnow().timestamp())
         user = mensaje.get("User", "Unknown User").strip()
         platform = mensaje.get("Platform", "Unknown Platform").strip()
         hashtags = mensaje.get("Hashtags", "").strip()
@@ -113,7 +111,6 @@ def insert_into_dynamodb(mensaje):
                 "message_id": message_id,
                 "text": text,
                 "sentiment": sentiment,
-                "timestamp": timestamp,
                 "user": user,
                 "platform": platform,
                 "hashtags": hashtags,
