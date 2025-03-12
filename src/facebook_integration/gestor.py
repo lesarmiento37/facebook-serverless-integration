@@ -6,7 +6,7 @@ import uuid
 
 # Configurar el cliente de DynamoDB
 dynamodb = boto3.resource("dynamodb")
-table_name = os.getenv("DYNAMODB_TABLE", "table_test")
+table_name = os.getenv("DYNAMODB_TABLE", "FacebookEvents")
 table = dynamodb.Table(table_name)
 
 
@@ -63,7 +63,15 @@ def handle_webhook(event):
         body = json.loads(event.get("body", "{}"))
         print("📩 Evento recibido de Facebook:", json.dumps(body, separators=(',', ':')))
 
+        if "mensaje" not in body:
+            print("🚨 JSON recibido no tiene 'mensaje'")
+            return {
+                "statusCode": 400,
+                "body": json.dumps({"message": "Falta el campo 'mensaje' en el JSON recibido"})
+            }
 
+        insert_into_dynamodb(body["mensaje"])
+        
         return {
             "statusCode": 200,
             "body": json.dumps({"status": "received"})
@@ -120,10 +128,12 @@ def insert_into_dynamodb(mensaje):
         )
         print(f"✅ Mensaje {message_id} guardado en DynamoDB")
 
+
         return {
             "statusCode": 200,
+            "message_id": message_id,
             "body": json.dumps({"status": "received", "message_id": message_id})
-        }
+        }        
 
     except Exception as e:
         print(f"❌ Error al guardar en DynamoDB: {str(e)}")

@@ -51,7 +51,7 @@ iamRolLambda:
           Statement:
             - Effect: "Allow"
               Action:
-                - 'lambda:*'
+                - 'dynamodb:*'
               Resource: 
                 - "*"
 

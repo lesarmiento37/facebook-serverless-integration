@@ -59,7 +59,7 @@ provider:
 
 
   environment:
-    DYNAMODB_TABLE: table_test  # 🔹 Variable de entorno para DynamoDB
+    DYNAMODB_TABLE: FacebookEvents  # 🔹 Variable de entorno para DynamoDB
 
   iam:
     role:
@@ -73,7 +73,7 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource:
-            - !GetAtt table_test.Arn  # 🔹 Permisos para la tabla DynamoDB
+            - !GetAtt FacebookEvents.Arn  # 🔹 Permisos para la tabla DynamoDB
 
 
 resources:
