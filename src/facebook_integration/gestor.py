@@ -3,7 +3,7 @@ import os
 
 def lambda_handler(event, context):
     """Manejo de eventos HTTP de API Gateway para la integración con Facebook Messenger."""
-    print("📥 Evento recibido:", json.dumps(event, indent=2))
+    print("📥 Evento recibido:", json.dumps(event, separators=(',', ':')))
 
     http_method = event.get("httpMethod", "")
 
@@ -53,6 +53,7 @@ def handle_webhook(event):
     try:
         body = json.loads(event.get("body", "{}"))
         print("📩 Evento recibido de Facebook:", json.dumps(body, separators=(',', ':')))
+
 
         return {
             "statusCode": 200,

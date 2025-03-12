@@ -31,7 +31,7 @@ def validate_token(token):
 
 def lambda_handler(event, context):
     """Maneja la autorización basada en el token enviado en la solicitud."""
-    print("📥 Evento recibido:", json.dumps(event, indent=2))
+    print("📥 Evento recibido authorizer:", json.dumps(event, separators=(',', ':')))
 
     try:
         method_arn = event.get("methodArn", "")

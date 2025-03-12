@@ -57,11 +57,43 @@ provider:
   logRetentionInDays: ${env:LOGS_RETENTION_DAYS}
   stackTags: ${self:custom.serviceTags}
 
+
+  environment:
+    DYNAMODB_TABLE: table_test  # 🔹 Variable de entorno para DynamoDB
+
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:Scan
+            - dynamodb:Query
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - !GetAtt table_test.Arn  # 🔹 Permisos para la tabla DynamoDB
+
+
 resources:
   Resources:
     iamRolLambda: ${file(infrastructure/iam/lambda/iamRolLambda.yaml):iamRolLambda}
     iamRolAuthorizer: ${file(infrastructure/iam/lambda/iamRolAuthorizer.yaml):iamRolAuthorizer}
 
+
+  # 🔹 Definición de la tabla DynamoDB
+    FacebookEvents:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: table_test
+        AttributeDefinitions:
+          - AttributeName: message_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: message_id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
 
 functions:
   - ${file(infrastructure/lambdas/funcion.yaml)} 
