@@ -1,5 +1,14 @@
 import json
 import os
+import boto3
+from datetime import datetime
+import uuid
+
+# Configurar el cliente de DynamoDB
+dynamodb = boto3.resource("dynamodb")
+table_name = os.getenv("DYNAMODB_TABLE", "table_test")
+table = dynamodb.Table(table_name)
+
 
 def lambda_handler(event, context):
     """Manejo de eventos HTTP de API Gateway para la integración con Facebook Messenger."""
@@ -70,4 +79,55 @@ def handle_webhook(event):
         return {
             "statusCode": 500,
             "body": json.dumps({"message": "Error interno del servidor"})
+        }
+def insert_into_dynamodb(mensaje):
+    """Procesa eventos con formato personalizado y los inserta en DynamoDB."""
+    try:
+        message_id = str(uuid.uuid4())  # Generar un UUID único
+        text = mensaje.get("Text", "No text provided").strip()
+        sentiment = mensaje.get("Sentiment", "Unknown").strip()
+        timestamp_str = mensaje.get("Timestamp", "")
+        timestamp = int(datetime.strptime(timestamp_str, "%d/%m/%Y %H:%M").timestamp()) if timestamp_str else int(datetime.utcnow().timestamp())
+        user = mensaje.get("User", "Unknown User").strip()
+        platform = mensaje.get("Platform", "Unknown Platform").strip()
+        hashtags = mensaje.get("Hashtags", "").strip()
+        retweets = int(mensaje.get("Retweets", 0))
+        likes = int(mensaje.get("Likes", 0))
+        country = mensaje.get("Country", "Unknown Country").strip()
+        year = int(mensaje.get("Year", 0))
+        month = int(mensaje.get("Month", 0))
+        day = int(mensaje.get("Day", 0))
+        hour = int(mensaje.get("Hour", 0))
+
+        # Insertar en DynamoDB
+        table.put_item(
+            Item={
+                "message_id": message_id,
+                "text": text,
+                "sentiment": sentiment,
+                "timestamp": timestamp,
+                "user": user,
+                "platform": platform,
+                "hashtags": hashtags,
+                "retweets": retweets,
+                "likes": likes,
+                "country": country,
+                "year": year,
+                "month": month,
+                "day": day,
+                "hour": hour
+            }
+        )
+        print(f"✅ Mensaje {message_id} guardado en DynamoDB")
+
+        return {
+            "statusCode": 200,
+            "body": json.dumps({"status": "received", "message_id": message_id})
+        }
+
+    except Exception as e:
+        print(f"❌ Error al guardar en DynamoDB: {str(e)}")
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"message": "Error interno al guardar en la base de datos"})
         }
